@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment & secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Build output
+build/
+dist/
+.react-router/
+.cache/
+coverage/
+
+# Fly / deploy
+.fly/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Temp
+*.tmp
+*~
