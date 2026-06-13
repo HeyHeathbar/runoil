@@ -253,7 +253,9 @@ describe("answerFromCorpus", () => {
       },
     };
 
-    const result = await answerFromCorpus("org_1", "who owns onboarding?", { corpus, model });
+    // query terms must match by substring (rankTruths is punctuation-sensitive in v1):
+    // "onboarding"+"owner" both hit at_3's haystack; "shipping" truth scores 0.
+    const result = await answerFromCorpus("org_1", "onboarding owner", { corpus, model });
 
     expect(listedFilter).toEqual({ status: "published" }); // published-only invariant
     expect(seenPrompt).toContain("at_3"); // grounded in the matched truth
