@@ -1,0 +1,27 @@
+app = "runoil"
+primary_region = "dfw"
+
+[build]
+
+[env]
+  PORT = "3000"
+  # Files-first storage on the mounted volume (see [mounts]).
+  CORPUS_ROOT = "/data/corpus"
+  MCP_TOKEN_ROOT = "/data/mcp-tokens"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  # Single instance: the git-backed Corpus and in-memory MCP sessions are not
+  # multi-instance-safe yet, so keep exactly one machine always running.
+  auto_stop_machines = false
+  auto_start_machines = false
+  min_machines_running = 1
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+
+[mounts]
+  source = "runoil_data"
+  destination = "/data"

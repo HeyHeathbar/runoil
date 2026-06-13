@@ -1,4 +1,11 @@
+.git
 .react-router
 build
 node_modules
+.data
+.env
+.env.*
+.agents
+.claude
+coverage
 README.md
