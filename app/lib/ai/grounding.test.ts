@@ -103,6 +103,7 @@ describe("answerFromCorpus", () => {
 
     expect(listedFilter).toEqual({ status: "published" }); // published-only invariant
     expect(seenPrompt).toContain("at_3"); // grounded in the matched truth
+    expect(seenPrompt).not.toContain("at_9"); // the unrelated truth was filtered out before grounding
     expect(result.answer).toBe("Onboarding has no owner. (at_3)");
     expect(result.citations.map((t) => t.id)).toEqual(["at_3"]); // only the matched truth is a receipt
   });
