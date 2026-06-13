@@ -33,6 +33,10 @@ QUESTION: ${question}`;
 // Receipts for a Truth-mode answer: the published Atomic Truths it was grounded in.
 export interface GroundedAnswer {
   answer: string;
+  // The truths RETRIEVED and fed to the model (the grounding set), NOT parsed from
+  // the answer's prose. It is a superset of what the answer actually cites: the model
+  // may reference only some, or none. UI receipt-cards should treat these as "what
+  // this answer was grounded in," not "exactly what was cited."
   citations: AtomicTruth[];
 }
 
