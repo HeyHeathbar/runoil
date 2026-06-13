@@ -30,6 +30,12 @@ export function AppHeader() {
         </Show>
         <Show when="signed-in">
           <Link
+            to="/sessions"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
+            Guide
+          </Link>
+          <Link
             to="/truths"
             className="text-sm font-medium text-muted-foreground hover:text-foreground"
           >

@@ -30,6 +30,13 @@ export type Confidence = "single-source" | "corroborated";
 
 export type Severity = "none" | "low" | "med" | "high";
 
+// Where a truth came from (spec Appendix A): the source session and a verbatim
+// supporting quote. Populated when a truth is proposed by the Guide.
+export interface Provenance {
+  sessionId?: string;
+  quote?: string;
+}
+
 // The signature field (spec B6): the delta between what's stated, lived, and documented.
 export interface RealityGap {
   stated?: string;
@@ -47,6 +54,7 @@ export interface AtomicTruth {
   owner?: string;
   confidence: Confidence;
   realityGap?: RealityGap;
+  provenance?: Provenance;
   tags: string[];
   timestamp: string; // ISO 8601, last change
   body: string; // markdown narrative: provenance, quotes, related links

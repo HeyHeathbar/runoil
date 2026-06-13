@@ -9,6 +9,7 @@ primary_region = "dfw"
   CORPUS_ROOT = "/data/corpus"
   MCP_TOKEN_ROOT = "/data/mcp-tokens"
   AI_SETTINGS_ROOT = "/data/ai-settings"
+  SESSIONS_ROOT = "/data/sessions"
 
 [http_service]
   internal_port = 3000

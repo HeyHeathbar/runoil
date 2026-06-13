@@ -17,6 +17,7 @@ export function serializeTruth(truth: AtomicTruth): string {
     ...(truth.owner !== undefined ? { owner: truth.owner } : {}),
     confidence: truth.confidence,
     ...(truth.realityGap ? { reality_gap: truth.realityGap } : {}),
+    ...(truth.provenance ? { provenance: truth.provenance } : {}),
     tags: truth.tags,
     timestamp: truth.timestamp,
     runoil_id: truth.id,
@@ -42,6 +43,7 @@ export function parseTruth(markdown: string): AtomicTruth {
     ...(data.owner !== undefined ? { owner: data.owner } : {}),
     confidence: data.confidence,
     ...(data.reality_gap ? { realityGap: data.reality_gap } : {}),
+    ...(data.provenance ? { provenance: data.provenance } : {}),
     tags: data.tags ?? [],
     timestamp,
     // gray-matter.stringify appends a trailing newline; strip it so the body
