@@ -36,4 +36,9 @@ describe("rankTruths", () => {
     );
     expect(rankTruths(truths, "shipping", 3)).toHaveLength(3);
   });
+
+  test("matches case-insensitively", () => {
+    const truths = [truth({ id: "at_1", statement: "Onboarding is slow" })];
+    expect(rankTruths(truths, "ONBOARDING").map((t) => t.id)).toEqual(["at_1"]);
+  });
 });

@@ -11,5 +11,6 @@ export default [index("routes/home.tsx"),
   route("sessions/:id", "routes/sessions.$id.tsx"),
   route("settings/mcp", "routes/settings.mcp.tsx"),
   route("settings/ai", "routes/settings.ai.tsx"),
+  route("admin", "routes/admin._index.tsx"),
   route("mcp", "routes/mcp.ts"),
 ] satisfies RouteConfig;
