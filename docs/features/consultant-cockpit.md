@@ -15,6 +15,8 @@ The pain: the consultant's signature moment — *"this isn't the AI guessing, th
 
 A consultant-first, multi-client chat cockpit inside RunOil: one workspace for a consultant's entire book of business, unifying chat, the review queue, synthesis, and the Corpus per client — with a Chat tab whose answers are grounded in each client's reconciled truth and show their receipts.
 
+The consultant's own practice is itself a **first-class RunOil tenant** — they use RunOil the way a client company does: their own Corpus/context, their own enabled modules, and their own model-provider API keys (bring-your-own-keys). The cockpit's "partner workspace" layer *is* this consultant tenant, and it appears in the client rail alongside the clients who have granted them access.
+
 ## Scope
 
 - **In scope:**
@@ -25,6 +27,9 @@ A consultant-first, multi-client chat cockpit inside RunOil: one workspace for a
     - **Open mode** — general AI (any model, voice) silently grounded in the client's verified truth so it never contradicts published facts.
   - Model picker + voice (in/out) available in both modes.
   - The **Consultant role** formalized as two layers (partner workspace + per-client scoped grant), default authority **propose-only**.
+  - **Consultant as a first-class tenant** — their practice has its own Corpus/context (methodology, question libraries, their practice's operating truth) and its own enabled modules; it appears in the client rail as a tenant they own.
+  - **Bring-your-own-keys (BYO keys)** — every tenant configures its own model-provider API keys; RunOil's model-agnostic provider layer routes a tenant's chat to that tenant's keys. The consultant working *inside a client* runs on **that client's keys**.
+  - **Per-tenant modules** — a tenant's enabled feature set is configurable; consultant tenants and client tenants light up different modules.
 - **Out of scope (for this slice):**
   - Employee-facing workspace deploy mode — *available as an optional per-client deploy later, never required*. Not built in this slice.
   - Presenter "reveal" control for the reality-gap (collapse-until-click). Default is inline; reveal is a fast-follow.
@@ -35,8 +40,10 @@ A consultant-first, multi-client chat cockpit inside RunOil: one workspace for a
 - **Capture (the Guide)** — discovery is run from inside the cockpit.
 - **Synthesize** — open loops / frictions / bottlenecks surfaced in the Synthesis tab and inline in Truth-mode answers.
 - **Govern & publish** — Chat reads only published truth (Open mode) / queries the Corpus (Truth mode); propose-only authority feeds the existing verification gate.
-- **Configuration plane** — consultant configures org-schema/rules where client-granted.
-- **Partner platform** — the cockpit *is* the partner workspace surface; cross-tenant identity + per-tenant scoped grant.
+- **Configuration plane** — consultant configures org-schema/rules where client-granted; per-tenant module enablement.
+- **Partner platform** — the cockpit *is* the partner workspace surface; cross-tenant identity + per-tenant scoped grant; the consultant's own practice is a tenant.
+- **Model layer** — the model-agnostic provider layer must resolve and use the **active tenant's** BYO keys per request.
+- **Billing/metering** — BYO keys mean the tenant pays its own provider directly for consumption chat; metering must attribute model usage to the correct tenant.
 
 ## Data model impact
 
@@ -52,6 +59,11 @@ No new Atomic Truth **types** required. The cockpit reads existing fields heavil
 
 No Corpus schema migration anticipated; possible new view/index to power the cross-client portfolio (read-only aggregation of per-tenant review-queue counts for the authenticated partner, respecting isolation).
 
+**Tenancy & keys:**
+- **Tenant kind** — tenants gain a kind (`client` | `consultant`/practice). A consultant tenant is a normal tenant with a different default module set; it owns its own Corpus/context.
+- **Per-tenant provider keys** — each tenant stores its own model-provider API keys, encrypted at rest in secrets management (never in the Corpus, never logged). The provider layer resolves keys from the active tenant context. No tenant's keys are ever usable from another tenant's cockpit.
+- **Per-tenant module flags** — a tenant record carries enabled-module flags (e.g. `discovery`, `governance`, `publishing`, `cockpit_chat`, `methodology_library`). Drives which work-area tabs/features render.
+
 ## How it works
 
 **Cockpit shell.** A unified three-region layout: left client rail (the consultant's granted clients, with review-queue badges), a center work-area that toggles Chat / Queue / Synthesis / Corpus for the *selected* client, and a right context inspector. Everything is scoped to one selected client at a time; the only cross-client surface is the portfolio overview, which shows counts/alerts but never co-mingles truth.
@@ -62,7 +74,9 @@ No Corpus schema migration anticipated; possible new view/index to power the cro
 
 **Consultant role & authority.** Default authority is **propose-only**: the consultant proposes Atomic Truths and interrogates the Corpus, but promotion `verified → published` stays with the client champion — consistent with the B6 invariant that contradictions are never auto-resolved. "Can verify & publish" remains a client-grantable elevation, not the default.
 
-**Reuse.** This feature is a *surface* over existing subsystems (the Guide, Corpus, synthesis queries, review queue, publishing, the model-agnostic provider layer). It must not fork parallel logic — it embeds and composes what's already built/planned.
+**Consultant as a tenant, BYO keys.** The consultant's practice is provisioned as its own tenant with its own Corpus (methodology, question libraries, the practice's operating truth) and its own enabled modules. It renders in the client rail as a tenant the consultant owns, alongside the clients who have granted them access. Every tenant — consultant or client — configures its own model-provider API keys; RunOil's model-agnostic provider layer resolves keys from the **active tenant** on each request. When the consultant works inside Acme's cockpit, chat runs on **Acme's keys** against **Acme's Corpus**; when they work in their own practice tenant, it runs on their keys against their Corpus. Keys are stored encrypted in secrets management, never written to a Corpus and never logged, and are never reachable from another tenant's context (consistent with strict tenant isolation). A tenant's enabled-module flags drive which work-area tabs and features render, so a consultant tenant and a client tenant can present different surfaces.
+
+**Reuse.** This feature is a *surface* over existing subsystems (the Guide, Corpus, synthesis queries, review queue, publishing, the model-agnostic provider layer). It must not fork parallel logic — it embeds and composes what's already built/planned. BYO keys extend the existing model-agnostic provider layer (which already abstracts providers) with per-tenant key resolution rather than a new model path.
 
 ### Per-client permission matrix (default)
 
@@ -88,6 +102,10 @@ No Corpus schema migration anticipated; possible new view/index to power the cro
 - [ ] In Open mode, answers are grounded in the client's published truth and do not contradict published Atomic Truths.
 - [ ] The Consultant role enforces propose-only by default; `verified → published` is blocked unless the client grants the elevation; all consultant actions are audit-logged.
 - [ ] Tenant isolation holds: no query or view returns data from a client the consultant is not currently scoped to.
+- [ ] The consultant's own practice is provisioned as a tenant with its own Corpus and a consultant-default module set, and appears in their client rail.
+- [ ] Each tenant configures its own model-provider API keys; chat in a given tenant's cockpit runs on that tenant's keys; a tenant's keys are never resolvable from another tenant's context.
+- [ ] API keys are stored encrypted in secrets management, never persisted to a Corpus and never written to logs.
+- [ ] Enabled-module flags drive which work-area tabs/features render; disabling a module hides its surface for that tenant.
 
 ## Open questions
 
@@ -96,3 +114,7 @@ No Corpus schema migration anticipated; possible new view/index to power the cro
 - **Model picker scope:** does the client's publishing/governance policy constrain *which* models the consultant may pick in a given client's cockpit, or is the picker purely consultant-side?
 - **Portfolio aggregation:** is the cross-client overview computed live per request, or via a maintained per-partner index? (Isolation must hold either way.)
 - **Voice transcripts:** are Chat voice interactions subject to the same consent/recording rules as discovery sessions, or treated as ephemeral?
+- **Engine-side keys:** BYO keys clearly power consumption chat (Truth/Open). Do they *also* power the engine/librarian work (extraction, reconciliation, synthesis), or does RunOil keep that on its own managed model for eval/quality consistency? (Cost transparency vs. regression-eval stability — see B16.)
+- **Key fallback / onboarding:** if a tenant hasn't configured keys yet, does chat hard-block, or is there a RunOil-managed trial/default? (A said BYO; this is just the empty-state behavior.)
+- **Module catalog:** what is the canonical list of modules, and who can toggle them — RunOil admin only, or the tenant's champion within rails?
+- **Consultant-practice modules:** which modules are on by default for a consultant tenant vs. a client tenant?
