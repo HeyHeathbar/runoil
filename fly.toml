@@ -8,6 +8,7 @@ primary_region = "dfw"
   # Files-first storage on the mounted volume (see [mounts]).
   CORPUS_ROOT = "/data/corpus"
   MCP_TOKEN_ROOT = "/data/mcp-tokens"
+  AI_SETTINGS_ROOT = "/data/ai-settings"
 
 [http_service]
   internal_port = 3000

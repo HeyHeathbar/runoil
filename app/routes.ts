@@ -7,5 +7,6 @@ export default [index("routes/home.tsx"),
   route("truths/new", "routes/truths.new.tsx"),
   route("truths/:id", "routes/truths.$id.tsx"),
   route("settings/mcp", "routes/settings.mcp.tsx"),
+  route("settings/ai", "routes/settings.ai.tsx"),
   route("mcp", "routes/mcp.ts"),
 ] satisfies RouteConfig;
