@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { rankTruths } from "./grounding";
+import { rankTruths, buildGroundedPrompt } from "./grounding";
 import type { AtomicTruth } from "../corpus/truth";
 
 function truth(partial: Partial<AtomicTruth> & { id: string; statement: string }): AtomicTruth {
@@ -40,5 +40,37 @@ describe("rankTruths", () => {
   test("matches case-insensitively", () => {
     const truths = [truth({ id: "at_1", statement: "Onboarding is slow" })];
     expect(rankTruths(truths, "ONBOARDING").map((t) => t.id)).toEqual(["at_1"]);
+  });
+});
+
+describe("buildGroundedPrompt", () => {
+  test("lists each truth's id, type and statement, and instructs citing ids", () => {
+    const prompt = buildGroundedPrompt("How does onboarding work?", [
+      truth({ id: "at_3", type: "Friction", statement: "Onboarding has no owner" }),
+    ]);
+    expect(prompt).toContain("at_3");
+    expect(prompt).toContain("Onboarding has no owner");
+    expect(prompt).toContain("Truth mode");
+    expect(prompt).toMatch(/cite/i);
+    expect(prompt).toContain("How does onboarding work?");
+  });
+
+  test("surfaces the reality gap when present", () => {
+    const prompt = buildGroundedPrompt("onboarding?", [
+      truth({
+        id: "at_3",
+        statement: "Onboarding",
+        realityGap: { stated: "5 days", actual: "3 weeks", documented: "3 days", severity: "high" },
+      }),
+    ]);
+    expect(prompt).toContain("5 days");
+    expect(prompt).toContain("3 weeks");
+    expect(prompt).toContain("high");
+  });
+
+  test("with no truths, instructs the model to admit the corpus does not cover it", () => {
+    const prompt = buildGroundedPrompt("anything?", []);
+    expect(prompt).toMatch(/do not guess|does not cover/i);
+    expect(prompt).toContain("anything?");
   });
 });
