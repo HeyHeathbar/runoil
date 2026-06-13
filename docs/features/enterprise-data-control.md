@@ -48,9 +48,10 @@ For an opted-in tenant, RunOil's **engine** work (extraction, reconciliation, sy
 
 ## Data model impact
 
-- **Tenant engine-routing config:** `engine_routing_mode` (`managed` | `in_account`); when `in_account`: provider kind (e.g. Azure OpenAI / Bedrock / Anthropic direct), the account credentials reference (encrypted secret handle, **never** the raw secret in the relational core or Corpus), and the model/deployment name that maps to RunOil's pinned model.
+*(Storage is file-based per-org JSON — the existing `AiSettings` pattern in `app/lib/ai/settings.server.ts` — not a relational DB.)*
+- **Tenant engine-routing config:** `engine_routing_mode` (`managed` | `in_account`) on the per-org config; when `in_account`: provider kind (e.g. Azure OpenAI / Bedrock / Anthropic direct), the account key stored in the per-org settings store (encrypted volume, never git-committed, redacted for the client — **never** in the Corpus), and the model/deployment name that maps to RunOil's pinned model.
 - **Pinned-model registry:** RunOil's canonical engine model id + version that an in-account deployment must satisfy (so evals stay valid).
-- No Atomic Truth schema change. Credentials live in secrets management, never in the Corpus, never logged.
+- No Atomic Truth schema change. Credentials live in the per-org settings store only, never in the Corpus, never logged.
 
 ## How it works
 
@@ -64,7 +65,7 @@ Consumption-side chat is unaffected here; it already uses the tenant's BYO keys 
 
 - [ ] A tenant can be set to `in_account` engine routing (Governed-tier gated) and supply provider-account credentials + the pinned-model deployment mapping.
 - [ ] Engine calls for that tenant run on the client's account using RunOil's pinned model id and prompts — verified by output parity against the managed path on the golden set.
-- [ ] Credentials are stored encrypted in secrets management; they never appear in the relational core, the Corpus, or any log.
+- [ ] Credentials are stored in the per-org settings store (encrypted volume, never git-committed), redacted before reaching the client; they never appear in the Corpus or any log.
 - [ ] Preflight blocks activation if the client's account cannot serve the pinned model/version, with a clear message.
 - [ ] A pinned-model bump that the client's account lacks surfaces an explicit error state, never a silent model substitution.
 - [ ] Audit log records routing mode for engine calls without exposing credentials.
