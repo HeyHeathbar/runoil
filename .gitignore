@@ -3,6 +3,11 @@ node_modules/
 .pnp
 .pnp.js
 
+# Vendored agent skills — regenerable from skills-lock.json (like node_modules).
+# .claude/skills/ holds symlinks into .agents/; ignore both, keep launch.json.
+.agents/
+.claude/skills/
+
 # Environment & secrets — never commit
 .env
 .env.*
@@ -17,6 +22,9 @@ coverage/
 
 # Fly / deploy
 .fly/
+
+# Local tenant Corpus repos (runtime data; lives on a Fly volume in prod)
+.data/
 
 # Logs
 *.log

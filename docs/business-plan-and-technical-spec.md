@@ -1,8 +1,8 @@
 ---
 title: RunOil — Business Plan & Technical Specification
-version: 0.1
+version: 0.1.1
 status: Working draft
-date: 2026-06-05
+date: 2026-06-13
 owner: "[to be provided]"
 tags: [runoil, business-plan, technical-spec, master]
 companion_docs: [RunOil-Business-Spec, RunOil-Brand-Book, RunOil-Product-Overview]
@@ -17,6 +17,7 @@ companion_docs: [RunOil-Business-Spec, RunOil-Brand-Book, RunOil-Product-Overvie
 
 | Version | Date | Author | Summary of changes |
 |---|---|---|---|
+| 0.1.1 | 2026-06-13 | _[owner]_ | Corrected the frontend stack (B18): RunOil uses Tailwind + shadcn/ui (Shadcn Studio), not Polaris. Polaris is Shopify's admin design system; RunOil is a standalone, self-branded product. |
 | 0.1 | 2026-06-05 | _[owner]_ | First complete edition: full business plan (Part A) and technical specification & feature set (Part B), with appendices. Supersedes the condensed Business Spec for depth; the Business Spec remains the canonical short-form reference. |
 
 **How to read this.** Part A is the **business plan** — market, model, money, go-to-market, operations. Part B is the **technical specification & feature set** — architecture, data model, every subsystem, the stack, and the feature roadmap. Appendices hold the reference tables (data model, RBAC, lexicon, open decisions, assumptions, sources). Figures drawn from third-party market research are attributed inline and listed in Appendix F; all financial figures are **illustrative frameworks**, not forecasts — every assumption is registered in Appendix E.
@@ -450,7 +451,7 @@ Because RunOil is the context layer AI tools pull truth *through*, it has a gove
 
 ## B18. Stack & infrastructure
 
-- **Frontend:** React Router 7 + Polaris web components.
+- **Frontend:** React Router 7 (framework mode) + Tailwind + shadcn/ui (Shadcn Studio). RunOil is a standalone, self-branded product, so it uses its own design system rather than Shopify's Polaris.
 - **Data:** Prisma + PostgreSQL (relational core); the Corpus persisted as versioned plain-text/markdown in git-backed per-tenant repositories; object storage for recordings/documents.
 - **Auth:** Clerk (+ enterprise SSO).
 - **Hosting/CI:** Fly.io; GitHub Flow for delivery.

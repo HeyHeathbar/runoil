@@ -1,8 +1,8 @@
 ---
 title: RunOil — Business Specification
-version: 0.2.1
+version: 0.2.2
 status: Working draft
-date: 2026-06-05
+date: 2026-06-13
 owner: "[to be provided]"
 tags: [runoil, business-spec, brand-bible]
 ---
@@ -15,6 +15,7 @@ tags: [runoil, business-spec, brand-bible]
 
 | Version | Date | Author | Summary of changes |
 |---|---|---|---|
+| 0.2.2 | 2026-06-13 | _[owner]_ | Corrected the frontend stack: Tailwind + shadcn/ui (Shadcn Studio), not Polaris — RunOil is a standalone, self-branded product, not a Shopify-admin app. |
 | 0.2.1 | 2026-06-05 | _[owner]_ | Locked customer-of-record: partners are introducers/implementers, **not resellers** — the end client subscribes to RunOil directly. Removed the corresponding open decision and the hedge in §13. |
 | 0.2 | 2026-06-05 | _[owner]_ | Business model reframed to **Partner First**. Software positioned as a high-value SaaS — the **Atomic Truth Engine**. Implementation partners are the front line, set their own billing, and keep 100% of their billables; RunOil pays a referral commission to consultants who introduce the software and takes **no cut of partner services**. Added Atomic Truth Engine to the lexicon and a customer-of-record confirmation to open decisions. |
 | 0.1 | 2026-06-05 | _[owner]_ | Initial working spec: positioning, problem, market, competition, core concepts, architecture, data model, Corpus/governance, technical foundation, moat, business model, operating model, roadmap, risks, metrics, lexicon, open decisions. |
@@ -185,7 +186,7 @@ The atomic unit, and the spine everything hangs off. It maps directly to a relat
 
 - **Model-agnostic by standard, not by integration count.** Build all model calls behind one clean interface; ship on a single model first (recommended: Claude), and add a second only when a paying customer's contract requires it. Claim agnostic-capable from day one without maintaining three integrations.
 - **Open standards.** MCP (now stewarded under a neutral foundation and adopted across Claude, ChatGPT Business/Team/Enterprise, and Grok) and Agent Skills (an open, cross-platform standard). The plumbing is commodity — which is why the moat must live elsewhere.
-- **Stack.** React Router 7 and Polaris web components on the front end; Prisma + PostgreSQL for data; Clerk for auth and RBAC; Fly.io for hosting; GitHub Flow for delivery. The usage meter is built into the architecture from day one.
+- **Stack.** React Router 7 with Tailwind and shadcn/ui (Shadcn Studio) on the front end; Prisma + PostgreSQL for data; Clerk for auth and RBAC; Fly.io for hosting; GitHub Flow for delivery. The usage meter is built into the architecture from day one.
 
 ## 12. The moat
 
