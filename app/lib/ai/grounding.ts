@@ -30,6 +30,35 @@ ${facts}
 QUESTION: ${question}`;
 }
 
+// Receipts for a Truth-mode answer: the published Atomic Truths it was grounded in.
+export interface GroundedAnswer {
+  answer: string;
+  citations: AtomicTruth[];
+}
+
+// The slice of the corpus this engine needs. Matches corpus.listTruths in
+// app/lib/corpus/repo.ts; injectable so the engine is testable without fs/git.
+export interface CorpusReader {
+  listTruths(
+    orgId: string,
+    filter?: { status?: TruthStatus },
+  ): Promise<AtomicTruth[]>;
+}
+
+// The Truth-mode engine: retrieve the org's PUBLISHED truths, rank them against the
+// question, ground an answer in them, and return the answer plus the ranked truths
+// as receipts. Hard invariant (carried from the MCP server): published-only.
+export async function answerFromCorpus(
+  orgId: string,
+  question: string,
+  deps: { corpus: CorpusReader; model: ModelProvider; limit?: number },
+): Promise<GroundedAnswer> {
+  const published = await deps.corpus.listTruths(orgId, { status: "published" });
+  const citations = rankTruths(published, question, deps.limit ?? DEFAULT_TRUTH_LIMIT);
+  const answer = await deps.model.complete(buildGroundedPrompt(question, citations));
+  return { answer, citations };
+}
+
 // Rank a set of truths by how many query terms they match, most matches first.
 // Pure + deterministic — ties break by most-recently-changed (timestamp desc).
 // This is a ranking utility only: the published-only invariant is enforced by the

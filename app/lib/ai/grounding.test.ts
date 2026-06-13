@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { rankTruths, buildGroundedPrompt } from "./grounding";
+import { rankTruths, buildGroundedPrompt, answerFromCorpus, type CorpusReader } from "./grounding";
 import type { AtomicTruth } from "../corpus/truth";
+import type { ModelProvider } from "./model";
 
 function truth(partial: Partial<AtomicTruth> & { id: string; statement: string }): AtomicTruth {
   return {
@@ -72,5 +73,45 @@ describe("buildGroundedPrompt", () => {
     const prompt = buildGroundedPrompt("anything?", []);
     expect(prompt).toMatch(/do not guess|does not cover/i);
     expect(prompt).toContain("anything?");
+  });
+});
+
+describe("answerFromCorpus", () => {
+  test("retrieves published truths, grounds an answer, returns answer + citations", async () => {
+    const published = [
+      truth({ id: "at_3", type: "Friction", statement: "Onboarding has no owner" }),
+      truth({ id: "at_9", statement: "Unrelated shipping policy" }),
+    ];
+    let listedFilter: unknown;
+    const corpus: CorpusReader = {
+      listTruths: async (_orgId, filter) => {
+        listedFilter = filter;
+        return published;
+      },
+    };
+    let seenPrompt = "";
+    const model: ModelProvider = {
+      complete: async (p) => {
+        seenPrompt = p;
+        return "Onboarding has no owner. (at_3)";
+      },
+    };
+
+    // query terms must match by substring (rankTruths is punctuation-sensitive in v1):
+    // "onboarding"+"owner" both hit at_3's haystack; "shipping" truth scores 0.
+    const result = await answerFromCorpus("org_1", "onboarding owner", { corpus, model });
+
+    expect(listedFilter).toEqual({ status: "published" }); // published-only invariant
+    expect(seenPrompt).toContain("at_3"); // grounded in the matched truth
+    expect(result.answer).toBe("Onboarding has no owner. (at_3)");
+    expect(result.citations.map((t) => t.id)).toEqual(["at_3"]); // only the matched truth is a receipt
+  });
+
+  test("with no matching truths, still answers (model told the corpus is empty)", async () => {
+    const corpus: CorpusReader = { listTruths: async () => [] };
+    const model: ModelProvider = { complete: async () => "The verified truth layer does not cover this yet." };
+    const result = await answerFromCorpus("org_1", "anything?", { corpus, model });
+    expect(result.citations).toEqual([]);
+    expect(result.answer).toMatch(/does not cover/i);
   });
 });
