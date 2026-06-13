@@ -36,6 +36,12 @@ export function AppHeader() {
             Corpus
           </Link>
           <Link
+            to="/settings/ai"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
+            AI
+          </Link>
+          <Link
             to="/settings/mcp"
             className="text-sm font-medium text-muted-foreground hover:text-foreground"
           >
