@@ -36,4 +36,15 @@ describe("OKF serialize/parse", () => {
     // OKF body lives below the frontmatter, unmodified.
     expect(markdown).toContain("Related: [Decision](/decisions/sla-48h.md)");
   });
+
+  test("round-trips provenance (source session + verbatim quote)", () => {
+    const withProvenance: AtomicTruth = {
+      ...sample,
+      provenance: { sessionId: "ses_abc", quote: "we ship in 48 hours" },
+    };
+    const markdown = serializeTruth(withProvenance);
+    expect(markdown).toContain("provenance:");
+    expect(markdown).toContain("we ship in 48 hours");
+    expect(parseTruth(markdown)).toEqual(withProvenance);
+  });
 });
