@@ -4,6 +4,7 @@ import {
   SignUpButton,
   UserButton,
   OrganizationSwitcher,
+  useUser,
 } from "@clerk/react-router";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
@@ -12,6 +13,10 @@ import { Logo } from "~/components/logo";
 // App shell header. Everything in RunOil is org-scoped (a tenant = a Clerk
 // Organization), so signed-in users always act within an org.
 export function AppHeader() {
+  const { user } = useUser();
+  const isPlatformAdmin =
+    (user?.publicMetadata as { platformAdmin?: boolean } | undefined)
+      ?.platformAdmin === true;
   return (
     <header className="flex items-center justify-between border-b px-6 py-3">
       <Link to="/" aria-label="RunOil home">
@@ -29,6 +34,14 @@ export function AppHeader() {
           </SignUpButton>
         </Show>
         <Show when="signed-in">
+          {isPlatformAdmin && (
+            <Link
+              to="/admin"
+              className="text-sm font-medium text-accent-foreground hover:underline"
+            >
+              Admin
+            </Link>
+          )}
           <Link
             to="/sessions"
             className="text-sm font-medium text-muted-foreground hover:text-foreground"
