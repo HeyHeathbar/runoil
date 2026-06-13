@@ -48,7 +48,7 @@ record every change in the document's own changelog.
 
 Per the standing stack and workflow:
 
-- **Stack:** TypeScript · React Router 7 (framework mode) · Polaris web components · Prisma + PostgreSQL · Clerk (auth/RBAC) · Fly.io (hosting, region `dfw`).
+- **Stack:** TypeScript · React Router 7 (framework mode) · Tailwind + shadcn/ui (Shadcn Studio) · Prisma + PostgreSQL · Clerk (auth/RBAC) · Fly.io (hosting, region `dfw`).
 - **Workflow:** GitHub Flow. `main` is always deployable; never commit directly to `main`. Branch per change (`feat/`, `fix/`, `chore/`, `docs/`) → PR → CI → merge → deploy.
 - **Repos are private by default.** Never commit secrets; `.env` is local-only and gitignored. Use `fly secrets set` for production secrets.
 - **Audit logging is always on** — authentication events and privileged actions, append-only, queryable.

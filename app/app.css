@@ -1,0 +1,138 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+@import "@clerk/ui/themes/shadcn.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* RunOil brand palette (docs/brand/brand-book.html): navy leads, violet
+   completes, zinc neutrals. */
+:root {
+  --background: #ffffff;
+  --foreground: #18181b; /* ink */
+  --card: #ffffff;
+  --card-foreground: #18181b;
+  --popover: #ffffff;
+  --popover-foreground: #18181b;
+  --primary: #0b2545; /* navy */
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5; /* z100 */
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a; /* z500 */
+  --accent: #f3f0fc; /* violet tint */
+  --accent-foreground: #5b21b6; /* violet-d */
+  --destructive: #b91c1c;
+  --border: #e4e4e7; /* z200 */
+  --input: #e4e4e7;
+  --ring: #7c3aed; /* violet */
+  --chart-1: #0b2545;
+  --chart-2: #13315c;
+  --chart-3: #7c3aed;
+  --chart-4: #a78bfa;
+  --chart-5: #71717a;
+  --radius: 0.625rem;
+  --sidebar: #fafafa;
+  --sidebar-foreground: #18181b;
+  --sidebar-primary: #0b2545;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #f3f0fc;
+  --sidebar-accent-foreground: #5b21b6;
+  --sidebar-border: #e4e4e7;
+  --sidebar-ring: #7c3aed;
+}
+
+/* Dark = navy field; violet/lilac leads for contrast (the "white knockout"
+   expression of the brand). */
+.dark {
+  --background: #0b1a2e;
+  --foreground: #f4f4f5;
+  --card: #0e2138;
+  --card-foreground: #f4f4f5;
+  --popover: #0e2138;
+  --popover-foreground: #f4f4f5;
+  --primary: #a78bfa; /* lilac */
+  --primary-foreground: #0b2545;
+  --secondary: #13315c; /* navy-2 */
+  --secondary-foreground: #f4f4f5;
+  --muted: #13315c;
+  --muted-foreground: #9fb0c7;
+  --accent: #1b2f4d;
+  --accent-foreground: #c9d4e3;
+  --destructive: #ef4444;
+  --border: #ffffff1a;
+  --input: #ffffff26;
+  --ring: #7c3aed;
+  --chart-1: #a78bfa;
+  --chart-2: #7c3aed;
+  --chart-3: #c9d4e3;
+  --chart-4: #9fb0c7;
+  --chart-5: #f4f4f5;
+  --sidebar: #0b1a2e;
+  --sidebar-foreground: #f4f4f5;
+  --sidebar-primary: #a78bfa;
+  --sidebar-primary-foreground: #0b2545;
+  --sidebar-accent: #1b2f4d;
+  --sidebar-accent-foreground: #c9d4e3;
+  --sidebar-border: #ffffff1a;
+  --sidebar-ring: #7c3aed;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
