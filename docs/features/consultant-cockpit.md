@@ -1,6 +1,6 @@
 # Feature: Consultant Cockpit
 
-- **Status:** Proposed
+- **Status:** In progress
 - **Branch:** `feat/consultant-cockpit`
 - **Owner:** heathbar
 - **Date:** 2026-06-13
