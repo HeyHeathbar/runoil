@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# pre-commit: run the Governance gate (Gate 4) on every commit — including
+# human terminal commits, which the Claude Code agent hook does not cover.
+#
+# Fast, network-free spec/code-drift check: a feature spec marked `Shipped`
+# must have all acceptance-criteria boxes checked. Blocks the commit on drift.
+# The same check runs in CI and in the agent's pre-commit hook.
+#
+# Enabled per-clone via:  npm run hooks:install   (sets core.hooksPath=.githooks)
+
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+exec node "$repo_root/scripts/check-governance.mjs"
