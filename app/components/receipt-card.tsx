@@ -28,7 +28,7 @@ export function ReceiptCard({ receipt }: { receipt: ReceiptView }) {
             <div className="mb-1.5 font-medium">
               Reality gap · severity {receipt.gap.severity}
             </div>
-            <dl className="grid gap-1.5">
+            <dl className="grid gap-2">
               {receipt.gap.stated && (
                 <div>
                   <dt className="text-muted-foreground">Stated</dt>
@@ -61,7 +61,7 @@ export function ReceiptCard({ receipt }: { receipt: ReceiptView }) {
       )}
 
       <CardContent>
-        <Link to={receipt.href} className="text-xs text-accent-foreground hover:underline">
+        <Link to={receipt.href} className="text-xs text-primary underline-offset-4 hover:underline">
           Open in Corpus →
         </Link>
       </CardContent>
