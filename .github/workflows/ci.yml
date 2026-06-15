@@ -16,6 +16,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run typecheck
-      - run: npm test
-      - run: npm run build
+      # The four quality gates (CLAUDE.md › Governance). Governance runs first —
+      # it's the fastest and catches spec/code drift before the slow gates.
+      - name: Gate 4 — Governance (spec reconciliation)
+        run: npm run governance
+      - name: Gate 1 — Types
+        run: npm run typecheck
+      - name: Gate 2 — Behavior (tests)
+        run: npm test
+      - name: Gate 3 — Build
+        run: npm run build
