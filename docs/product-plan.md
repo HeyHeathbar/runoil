@@ -7,6 +7,9 @@ RunOil is an **Organizational Intelligence Layer** — a living, self-updating e
 
 **Core Value:** Single source of truth + protected ground-truth employee insights + automated conflict & ethos detection.
 
+## Direction update (2026-06-23)
+RunOil is adding the **Consultant Cockpit** (a governed chat surface — Truth/Open modes with receipts), **company role-views** (champion · employee · staff · auditor), **BYO chat keys + a RunOil-managed engine**, and an **enterprise data-control ladder** (in-account → dedicated → on-prem). The Truth-mode engine and `/cockpit` UI are implemented; the governance framework (four gates + CLAUDE.md) is in place. This adds a consumption-layer surface and an on-prem option the original neutral/publish-only framing left out — **neutrality is preserved** (the cockpit grounds the company's *own* truth; RunOil still publishes into external tools via MCP). Full detail: `docs/features/consultant-cockpit.md`, `docs/features/enterprise-data-control.md`, and `docs/superpowers/plans/`.
+
 ## Goals
 - LLM-agnostic (works with Claude Enterprise, ChatGPT Enterprise, Grok, etc.)
 - Highly configurable for different organization types and sizes

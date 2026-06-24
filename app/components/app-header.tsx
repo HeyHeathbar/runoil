@@ -43,6 +43,12 @@ export function AppHeader() {
             </Link>
           )}
           <Link
+            to="/cockpit"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
+            Cockpit
+          </Link>
+          <Link
             to="/sessions"
             className="text-sm font-medium text-muted-foreground hover:text-foreground"
           >
