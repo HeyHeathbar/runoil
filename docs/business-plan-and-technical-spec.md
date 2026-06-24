@@ -17,10 +17,29 @@ companion_docs: [RunOil-Business-Spec, RunOil-Brand-Book, RunOil-Product-Overvie
 
 | Version | Date | Author | Summary of changes |
 |---|---|---|---|
+| 0.2 | 2026-06-23 | _[agent]_ | **Direction update** (see section below): adds the Consultant Cockpit (a governed chat surface), company role-views, BYO chat keys + RunOil-managed engine, and an enterprise data-control ladder incl. on-prem — partially reversing the v0.1 "no consumption UI / no self-host" stance. Truth-mode engine + `/cockpit` UI implemented. |
 | 0.1.1 | 2026-06-13 | _[owner]_ | Corrected the frontend stack (B18): RunOil uses Tailwind + shadcn/ui (Shadcn Studio), not Polaris. Polaris is Shopify's admin design system; RunOil is a standalone, self-branded product. |
 | 0.1 | 2026-06-05 | _[owner]_ | First complete edition: full business plan (Part A) and technical specification & feature set (Part B), with appendices. Supersedes the condensed Business Spec for depth; the Business Spec remains the canonical short-form reference. |
 
 **How to read this.** Part A is the **business plan** — market, model, money, go-to-market, operations. Part B is the **technical specification & feature set** — architecture, data model, every subsystem, the stack, and the feature roadmap. Appendices hold the reference tables (data model, RBAC, lexicon, open decisions, assumptions, sources). Figures drawn from third-party market research are attributed inline and listed in Appendix F; all financial figures are **illustrative frameworks**, not forecasts — every assumption is registered in Appendix E.
+
+---
+
+## Direction update (2026-06-23)
+
+> Records strategic changes made after v0.1. **Where this conflicts with Part A/B sections below, this section governs**; those sections will be revised in a later edition. Details live in the feature specs under `docs/features/` and the implementation plans under `docs/superpowers/plans/`.
+
+**RunOil is adding a consultant-facing consumption surface — the Consultant Cockpit.** v0.1 deliberately stayed out of the consumption layer (A2: "publish into every model, replace none"; A6: "never compete on a chat UI"). We are now building a chat surface — but a *governed* one — without abandoning neutrality:
+
+- **Consultant Cockpit** — a multi-client cockpit (client rail · Chat / Queue / Synthesis / Corpus · inspector) for the partner who delivers RunOil. Spec: `docs/features/consultant-cockpit.md`.
+- **Truth mode vs Open mode** — answers are grounded in the client's governed Corpus, shown with receipts (reality-gap, provenance, conflict flags). Truth mode is the strict trust/demo surface; Open mode is grounded general AI. *Neutrality preserved:* the cockpit is a trust surface for the company's **own** truth, and RunOil still publishes into Claude/ChatGPT/etc. via MCP — it doesn't replace them.
+- **Company role-views** — single-tenant, role-aware surfaces for the client's own people: champion workbench (govern + **publish**), employee chat ("B mode", optional/not required), staff participation (protected/aggregated), auditor (read-only). *Designed (demo built); specs pending.*
+- **Consultant as a first-class tenant** with their own Corpus, modules, and **bring-your-own model keys**. Chat runs on the tenant's keys; the **engine** (extraction/reconciliation/synthesis) stays **RunOil-managed** to keep evals stable.
+- **Enterprise data-control ladder** — `managed → in-account engine → dedicated/single-tenant → on-premise/customer-VPC`. This **reverses** the v0.1 stance that self-host was out of scope: dedicated and on-prem are now an enterprise/regulated-buyer tier (Rung 1 specced). Spec: `docs/features/enterprise-data-control.md`.
+
+**Implementation status.** Shipped/implemented: the Truth-mode **grounded-query engine** and the `/cockpit` **Truth-mode UI** (see the two plans), plus the **agent-first governance framework** (four quality gates + CLAUDE.md + ADR 0001). Not yet started: Open mode + voice, the consultant role/RBAC layer, BYO-key split, the company-view specs, enterprise data-control build.
+
+**Principle refined, not abandoned.** "Neutral by design / replace none" now means *neutral across the models a company consumes* — RunOil grounds and governs the truth for all of them; the cockpit is an **optional governed front-end**, not a replacement for the company's chosen AI tools.
 
 ---
 

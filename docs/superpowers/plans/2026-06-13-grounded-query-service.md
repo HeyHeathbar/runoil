@@ -1,5 +1,7 @@
 # Grounded Query Service (Truth-Mode Engine) Implementation Plan
 
+- **Status:** In progress — all tasks implemented & verified (four gates green); reconciled 2026-06-23, pending merge to main.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the backend service that answers a natural-language question grounded **only** in an org's published Atomic Truths, returning the answer plus the cited truths as receipts — the engine behind the cockpit's Truth mode.
@@ -26,7 +28,7 @@ Reuse, do not fork: the keyword-match logic mirrors `app/lib/mcp-server.server.t
 - Create: `app/lib/ai/grounding.ts`
 - Test: `app/lib/ai/grounding.test.ts`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // app/lib/ai/grounding.test.ts
@@ -71,12 +73,12 @@ describe("rankTruths", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run app/lib/ai/grounding.test.ts`
 Expected: FAIL — `rankTruths` is not exported / module not found.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 ```ts
 // app/lib/ai/grounding.ts
@@ -109,12 +111,12 @@ export function rankTruths(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx vitest run app/lib/ai/grounding.test.ts`
 Expected: PASS (3 tests).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/lib/ai/grounding.ts app/lib/ai/grounding.test.ts
@@ -129,7 +131,7 @@ git commit -m "feat(ai): rankTruths — published-truth retrieval for Truth mode
 - Modify: `app/lib/ai/grounding.ts`
 - Test: `app/lib/ai/grounding.test.ts`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // append to app/lib/ai/grounding.test.ts
@@ -168,12 +170,12 @@ describe("buildGroundedPrompt", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run app/lib/ai/grounding.test.ts`
 Expected: FAIL — `buildGroundedPrompt` is not exported.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 ```ts
 // append to app/lib/ai/grounding.ts
@@ -205,12 +207,12 @@ QUESTION: ${question}`;
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx vitest run app/lib/ai/grounding.test.ts`
 Expected: PASS (6 tests total).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/lib/ai/grounding.ts app/lib/ai/grounding.test.ts
@@ -225,7 +227,7 @@ git commit -m "feat(ai): buildGroundedPrompt — strict Truth-mode prompt with r
 - Modify: `app/lib/ai/grounding.ts`
 - Test: `app/lib/ai/grounding.test.ts`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // append to app/lib/ai/grounding.test.ts
@@ -273,12 +275,12 @@ describe("answerFromCorpus", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run app/lib/ai/grounding.test.ts`
 Expected: FAIL — `answerFromCorpus` / `CorpusReader` not exported.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 ```ts
 // append to app/lib/ai/grounding.ts
@@ -313,12 +315,12 @@ export async function answerFromCorpus(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx vitest run app/lib/ai/grounding.test.ts`
 Expected: PASS (8 tests total).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/lib/ai/grounding.ts app/lib/ai/grounding.test.ts
@@ -334,12 +336,12 @@ git commit -m "feat(ai): answerFromCorpus — Truth-mode engine (published-only)
 
 > No unit test: this is thin composition of server singletons (`corpus`, `aiSettings`) that touch fs/git/Clerk. The tested core is Tasks 1–3. Verified by typecheck. Confirm the exact export names by reading the imports below before writing.
 
-- [ ] **Step 1: Confirm the singletons exist**
+- [x] **Step 1: Confirm the singletons exist**
 
 Run: `grep -n "export const corpus" app/lib/corpus.server.ts && grep -nE "export (const|function) aiSettings|export const aiSettings" app/lib/ai/settings.server.ts`
 Expected: prints the `corpus` export and the `aiSettings` store export. If the settings store is named differently (e.g. a factory result), use that name in Step 2.
 
-- [ ] **Step 2: Write the glue**
+- [x] **Step 2: Write the glue**
 
 ```ts
 // app/lib/ai/grounding.server.ts
@@ -359,17 +361,17 @@ export async function answerForOrg(
 }
 ```
 
-- [ ] **Step 3: Typecheck the whole app**
+- [x] **Step 3: Typecheck the whole app**
 
 Run: `npm run typecheck`
 Expected: PASS, no errors. (If `aiSettings.get` or `corpus` names differ, fix the imports to match Step 1's output, then re-run.)
 
-- [ ] **Step 4: Run the full test suite**
+- [x] **Step 4: Run the full test suite**
 
 Run: `npm test`
 Expected: PASS — the 8 new grounding tests plus all existing tests, no regressions.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/lib/ai/grounding.server.ts

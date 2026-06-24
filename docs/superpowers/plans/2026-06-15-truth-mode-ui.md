@@ -1,5 +1,7 @@
 # Truth-Mode Chat UI Implementation Plan
 
+- **Status:** In progress — all tasks implemented & verified (four gates green); reconciled 2026-06-23, pending merge to main.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ship the first usable surface of the Consultant Cockpit — a `/cockpit` route where a signed-in user asks a question and gets a Truth-mode answer grounded in their org's published Corpus, with the cited truths rendered as receipt cards (statement, type/status, reality-gap, provenance, conflict flag).
@@ -32,7 +34,7 @@ Reuse, do not fork: `toReceiptView` reads the real `AtomicTruth`/`RealityGap` ty
 - Create: `app/lib/cockpit/receipt.ts`
 - Test: `app/lib/cockpit/receipt.test.ts`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // app/lib/cockpit/receipt.test.ts
@@ -84,12 +86,12 @@ describe("toReceiptView", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run app/lib/cockpit/receipt.test.ts`
 Expected: FAIL — cannot find module `./receipt`.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 ```ts
 // app/lib/cockpit/receipt.ts
@@ -125,12 +127,12 @@ export function toReceiptView(truth: AtomicTruth): ReceiptView {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx vitest run app/lib/cockpit/receipt.test.ts`
 Expected: PASS (4 tests).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/lib/cockpit/receipt.ts app/lib/cockpit/receipt.test.ts
@@ -146,7 +148,7 @@ git commit -m "feat(cockpit): toReceiptView — display contract for a Truth-mod
 
 > No unit test: the repo's Vitest runs in a `node` environment with no DOM/React-render setup, so presentational components are verified by typecheck + build. Its logic lives in `toReceiptView` (Task 1, tested).
 
-- [ ] **Step 1: Write the component**
+- [x] **Step 1: Write the component**
 
 ```tsx
 // app/components/receipt-card.tsx
@@ -222,12 +224,12 @@ export function ReceiptCard({ receipt }: { receipt: ReceiptView }) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 Expected: clean. (If `Badge` does not accept `variant="secondary"`/`"destructive"`, check `app/components/ui/badge.tsx` for the real variant names and use those — `StatusBadge` already uses `secondary`/`destructive`/`default`/`outline`, so they exist.)
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add app/components/receipt-card.tsx
@@ -244,7 +246,7 @@ git commit -m "feat(cockpit): ReceiptCard — render a Truth-mode receipt"
 - Modify: `app/components/app-header.tsx`
 - Modify: `docs/features/consultant-cockpit.md`
 
-- [ ] **Step 1: Create the route**
+- [x] **Step 1: Create the route**
 
 ```tsx
 // app/routes/cockpit.tsx
@@ -354,13 +356,13 @@ export default function Cockpit({ loaderData, actionData }: Route.ComponentProps
 }
 ```
 
-- [ ] **Step 2: Register the route** in `app/routes.ts` — add this line after the `truths/:id` route (line with `route("truths/:id", ...)`):
+- [x] **Step 2: Register the route** in `app/routes.ts` — add this line after the `truths/:id` route (line with `route("truths/:id", ...)`):
 
 ```ts
   route("cockpit", "routes/cockpit.tsx"),
 ```
 
-- [ ] **Step 3: Add the nav link** in `app/components/app-header.tsx`. Inside `<Show when="signed-in">`, immediately after the `isPlatformAdmin && (...)` Admin link block and before the `Guide` link, add:
+- [x] **Step 3: Add the nav link** in `app/components/app-header.tsx`. Inside `<Show when="signed-in">`, immediately after the `isPlatformAdmin && (...)` Admin link block and before the `Guide` link, add:
 
 ```tsx
           <Link
@@ -371,7 +373,7 @@ export default function Cockpit({ loaderData, actionData }: Route.ComponentProps
           </Link>
 ```
 
-- [ ] **Step 4: Bump the spec status** in `docs/features/consultant-cockpit.md`. Change the line:
+- [x] **Step 4: Bump the spec status** in `docs/features/consultant-cockpit.md`. Change the line:
 
 ```
 - **Status:** Proposed
@@ -381,7 +383,7 @@ to:
 - **Status:** In progress
 ```
 
-- [ ] **Step 5: Run all four gates**
+- [x] **Step 5: Run all four gates**
 
 ```bash
 npm run typecheck
@@ -391,7 +393,7 @@ npm run governance
 ```
 Expected: typecheck clean; tests pass (the 59 existing + 4 new `toReceiptView` = 63); build succeeds; governance passes (consultant-cockpit.md now "In progress", still valid). If typecheck flags the `actionData` union narrowing, adjust the `"answer" in actionData` / `"error" in actionData` guards until clean — do not weaken the gate.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/routes/cockpit.tsx app/routes.ts app/components/app-header.tsx docs/features/consultant-cockpit.md
